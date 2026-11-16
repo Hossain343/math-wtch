@@ -23,18 +23,21 @@ jobs:
 
       - run: flutter pub get
 
-      # Only real errors stop the build (infos/warnings are allowed).
       - run: flutter analyze --no-fatal-infos --no-fatal-warnings
-
-      # Checks the exact textbook examples (g(-2)=22, a=-1, ranges, notations ...)
       - run: flutter test
 
-      # ساخت خودکار پوشه و فایل‌های پلتفرم اندروید
       - run: flutter create . --platforms=android
 
+      # اسم واقعی اپ روی گوشی
+      - run: sed -i 's/android:label="[^"]*"/android:label="math-and"/' android/app/src/main/AndroidManifest.xml
+
+      # ساخت APK
       - run: flutter build apk --release
+
+      # نام فایل APK خروجی را به app-release1.apk تغییر بده
+      - run: cp build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/app-release1.apk
 
       - uses: actions/upload-artifact@v4
         with:
-          name: function-analyzer-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          name: math-and-apk
+          path: build/app/outputs/flutter-apk/app-release1.apk
